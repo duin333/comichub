@@ -71,4 +71,25 @@ public class UploadController : ControllerBase
 
     private static string NaturalKey(string name) =>
         Regex.Replace(name, @"\d+", m => m.Value.PadLeft(10, '0'));
+
+    // POST /api/Upload/optimize-existing?folder=seed/covers&limit=100&sql=true
+    // Chuyển ảnh CÓ SẴN sang WebP (kèm ảnh thu nhỏ cho thư mục bìa), giữ nguyên file gốc.
+    // sql=true: trả về văn bản thuần chứa các câu UPDATE để chạy trong Workbench
+    [HttpPost("optimize-existing")]
+    public async Task<IActionResult> OptimizeExisting(
+        [FromQuery] string folder = "seed/covers", [FromQuery] int limit = 100, [FromQuery] bool sql = false)
+    {
+        try
+        {
+            var report = await _files.OptimizeFolderAsync(folder, Math.Clamp(limit, 1, 500));
+            if (!sql) return Ok(report);
+
+            var text = report.Sql + string.Concat(report.Errors.Select(e => $"-- LỖI: {e}\n"));
+            return Content(text, "text/plain; charset=utf-8");
+        }
+        catch (InvalidUploadException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
 }

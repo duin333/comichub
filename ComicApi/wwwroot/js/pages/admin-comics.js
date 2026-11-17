@@ -29,7 +29,7 @@
 
     // ---------- Danh sách ----------
     function rowHtml(c) {
-        const cover = c.coverUrl ? UI.escapeHtml(c.coverUrl) : UI.placeholder;
+        const cover = c.coverUrl ? UI.escapeHtml(thumbOf(c.coverUrl)) : UI.placeholder;
         const done = c.status === 'Completed';
         const genres = c.genres
             .map(g => `<span class="badge text-bg-secondary me-1">${UI.escapeHtml(g)}</span>`).join('');
