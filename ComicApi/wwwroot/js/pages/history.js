@@ -29,7 +29,7 @@
     }
 
     function itemHtml(h) {
-        const cover = h.coverUrl ? esc(h.coverUrl) : UI.placeholder;
+        const cover = h.coverUrl ? esc(thumbOf(h.coverUrl)) : UI.placeholder;
         const label = UI.chapterLabel({ number: h.chapterNumber, title: h.chapterTitle });
 
         return `

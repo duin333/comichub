@@ -63,7 +63,7 @@
   function cardsHtml(comics) {
     return comics.map(c => `
       <a class="chat-card" href="/comic.html?id=${c.id}">
-        <img src="${c.coverUrl ? UI.escapeHtml(c.coverUrl) : UI.placeholder}" alt=""
+        <img src="${c.coverUrl ? UI.escapeHtml(thumbOf(c.coverUrl)) : UI.placeholder}" alt=""
              data-fallback="placeholder">
         <div>
           <div class="fw-semibold small">${UI.escapeHtml(c.title)}</div>

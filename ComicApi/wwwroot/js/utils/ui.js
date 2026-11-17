@@ -78,7 +78,7 @@
 
     // Thẻ truyện dùng ở trang chủ (sẽ làm lại ở bước 10.9)
     function comicCard(c) {
-        const cover = c.coverUrl ? escapeHtml(c.coverUrl) : placeholder;
+        const cover = c.coverUrl ? escapeHtml(thumbOf(c.coverUrl)) : placeholder;
         const done = c.status === 'Completed';
         const latest = c.latestChapterNumber ? `Chương ${c.latestChapterNumber}` : 'Chưa có chương';
         return `
@@ -122,7 +122,7 @@
 
     // Thẻ truyện kiểu mới: bìa bên trái, ruy-băng ngang, thông tin bên phải
     function comicCardX(c, ctx = {}) {
-        const cover = c.coverUrl ? escapeHtml(c.coverUrl) : placeholder;
+        const cover = c.coverUrl ? escapeHtml(thumbOf(c.coverUrl)) : placeholder;
         const label = comicLabel(c, ctx.hotIds);
         const genres = (c.genres || []).slice(0, 2).map(escapeHtml).join(', ');
         const meta = [escapeHtml(c.author || 'Đang cập nhật'), genres].filter(Boolean).join(' · ');
@@ -163,7 +163,7 @@
 
     // Thẻ poster nhỏ cho hàng "Cùng thể loại"
     function posterCard(c) {
-        const cover = c.coverUrl ? escapeHtml(c.coverUrl) : placeholder;
+        const cover = c.coverUrl ? escapeHtml(thumbOf(c.coverUrl)) : placeholder;
         const badge = c.ratingCount
             ? `<span class="poster-badge">★ ${Number(c.ratingAverage).toFixed(1)}</span>`
             : '';
@@ -838,3 +838,12 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', checkAlreadyBroken);
     else checkAlreadyBroken();
 })();
+
+// 12.3: ảnh bìa thu nhỏ cho thẻ truyện. Chỉ ảnh .webp trong /uploads mới có bản thu nhỏ (thư mục thumbs cùng cấp);
+// ảnh khác (.jpg cũ, ảnh từ liên kết ngoài) được giữ nguyên nên không bao giờ bị hỏng liên kết
+function thumbOf(url) {
+    if (!url || url.includes('..')) return url;
+    const m = /^(\/uploads\/(?:[^\/?#]+\/)*)([^\/?#]+)\.webp$/i.exec(url);
+    if (!m || m[1].endsWith('/thumbs/')) return url;
+    return m[1] + 'thumbs/' + m[2] + '.webp';
+}
