@@ -8,7 +8,10 @@ RUN dotnet restore ComicApi/ComicApi.csproj
 
 COPY . .
 ARG SixLaborsLicenseKey
-RUN dotnet publish ComicApi/ComicApi.csproj -c Release -o /app/publish --no-restore
+RUN printf '%s' "$SixLaborsLicenseKey" > /tmp/sixlabors.lic \
+    && unset SixLaborsLicenseKey \
+    && dotnet publish ComicApi/ComicApi.csproj -c Release -o /app/publish --no-restore -p:SixLaborsLicenseFile=/tmp/sixlabors.lic \
+    && rm /tmp/sixlabors.lic
 
 # Stage 2: Run application
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
