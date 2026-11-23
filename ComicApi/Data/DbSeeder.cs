@@ -5,7 +5,7 @@ namespace ComicApi.Data;
 
 public static class DbSeeder
 {
-    public static async Task SeedAsync(AppDbContext db)
+    public static async Task SeedAsync(AppDbContext db, string? adminPassword = null)
     {
         // Đã có dữ liệu mẫu thì thôi, tránh nạp trùng mỗi lần chạy
         if (await db.Genres.AnyAsync()) return;
@@ -18,7 +18,7 @@ public static class DbSeeder
         {
             Username = "admin",
             Email = "admin@comic.local",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin@123"),
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(adminPassword ?? "Admin@123"),
             Role = Roles.Admin
         };
         var reader = new User

@@ -71,7 +71,10 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     await db.Database.MigrateAsync();
-    await DbSeeder.SeedAsync(db);
+    var adminPassword = builder.Configuration["Seed:AdminPassword"];
+    if (!app.Environment.IsDevelopment() && string.IsNullOrWhiteSpace(adminPassword))
+        throw new InvalidOperationException("Cần cấu hình Seed:AdminPassword khi triển khai.");
+    await DbSeeder.SeedAsync(db, adminPassword);
 }
 
 app.UseMiddleware<RequestLoggingMiddleware>();    // ngoài cùng, để thấy cả lỗi 500
@@ -102,7 +105,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// Hosting kết thúc TLS tại proxy có thể tắt chuyển hướng bên trong container.
+if (builder.Configuration.GetValue("Hosting:HttpsRedirect", true))
+    app.UseHttpsRedirection();
 app.UseDefaultFiles();
 app.UseStaticFiles(new StaticFileOptions
 {

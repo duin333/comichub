@@ -7,6 +7,7 @@ COPY ComicApi/ComicApi.csproj ComicApi/
 RUN dotnet restore ComicApi/ComicApi.csproj
 
 COPY . .
+ARG SixLaborsLicenseKey
 RUN dotnet publish ComicApi/ComicApi.csproj -c Release -o /app/publish --no-restore
 
 # Stage 2: Run application
