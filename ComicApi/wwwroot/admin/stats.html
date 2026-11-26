@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Thống kê - ComicHub</title>
+    <link href="/lib/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/site.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap">
+    <script src="/js/utils/theme.js"></script>
+</head>
+<body>
+    <div id="navbar"></div>
+    <main class="container py-4" id="adminRoot">
+        <div id="adminNav"></div>
+
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 my-3">
+            <div>
+                <h1 class="section-title mb-0">Thống kê</h1>
+                <div id="statsUpdated" class="small text-muted"></div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <label for="statsDays" class="small text-muted mb-0">Biểu đồ theo</label>
+                <select id="statsDays" class="form-select form-select-sm w-auto">
+                    <option value="7">7 ngày</option>
+                    <option value="14" selected>14 ngày</option>
+                    <option value="30">30 ngày</option>
+                    <option value="90">90 ngày</option>
+                </select>
+                <button id="statsRefresh" type="button" class="btn btn-sm btn-outline-secondary">Làm mới</button>
+            </div>
+        </div>
+
+        <div id="statsAlert" class="alert alert-danger d-none" role="alert"></div>
+
+        <div class="row g-3 mb-4" id="statCards"></div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-lg-6">
+                <section class="card h-100">
+                    <div class="card-body">
+                        <h2 class="h6">Bình luận mỗi ngày</h2><div id="chartComments" class="chart"></div>
+                    </div>
+                </section>
+            </div>
+            <div class="col-lg-6">
+                <section class="card h-100">
+                    <div class="card-body">
+                        <h2 class="h6">Người dùng mới mỗi ngày</h2><div id="chartUsers" class="chart"></div>
+                    </div>
+                </section>
+            </div>
+            <div class="col-lg-6">
+                <section class="card h-100">
+                    <div class="card-body">
+                        <h2 class="h6">Đánh giá mỗi ngày</h2><div id="chartRatings" class="chart"></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-lg-8">
+                <section class="card h-100">
+                    <div class="card-body">
+                        <h2 class="h6">Truyện xem nhiều nhất</h2>
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle mb-0">
+                                <thead><tr><th>#</th><th>Truyện</th><th class="text-end">Lượt xem</th><th class="text-end">Chương</th><th class="text-end">Theo dõi</th><th class="text-end">Đánh giá</th></tr></thead>
+                                <tbody id="topComicsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div class="col-lg-4">
+                <section class="card h-100">
+                    <div class="card-body">
+                        <h2 class="h6">Bình luận nhiều nhất</h2><ul id="topCommentersList" class="list-unstyled mb-0"></ul>
+                    </div>
+                </section>
+            </div>
+            <div class="col-md-6">
+                <section class="card h-100">
+                    <div class="card-body">
+                        <h2 class="h6">Bộ nhớ đệm (12.2)</h2><div id="cacheBox"></div>
+                    </div>
+                </section>
+            </div>
+            <div class="col-md-6">
+                <section class="card h-100">
+                    <div class="card-body">
+                        <h2 class="h6">Máy chủ</h2><div id="systemBox"></div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <script src="/lib/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="/js/utils/auth.js"></script>
+    <script src="/js/api/client.js"></script>
+    <script src="/js/utils/ui.js"></script>
+    <script src="/js/utils/admin.js"></script>
+    <script src="/js/pages/admin-stats.js"></script>
+</body>
+</html>

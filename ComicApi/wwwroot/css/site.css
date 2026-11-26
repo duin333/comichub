@@ -3093,3 +3093,34 @@ mark {
         background: var(--teal-700);
         color: #fff;
     }
+
+/* =====================================================================
+   12.4 BIỂU ĐỒ CỘT (SVG) CỦA TRANG THỐNG KÊ
+   ===================================================================== */
+.chart svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.chart .bar {
+    fill: var(--teal-700);
+}
+
+[data-bs-theme="dark"] .chart .bar {
+    fill: var(--teal-400);
+}
+
+.chart .bar:hover {
+    opacity: .75;
+}
+
+.chart .grid {
+    stroke: var(--line);
+    stroke-width: 1;
+}
+
+.chart .tick {
+    fill: var(--bs-secondary-color);
+    font-size: 11px;
+}
