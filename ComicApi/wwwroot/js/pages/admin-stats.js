@@ -8,12 +8,17 @@
         c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     let reqId = 0;                      // đánh số mỗi lần tải để bỏ qua kết quả của lần tải cũ đến muộn
 
-    // Làm tròn mốc cao nhất của biểu đồ lên 1, 2, 5, 10, 20, 50... cho trục nhìn gọn
-    function niceMax(v) {
-        if (v <= 1) return 1;
-        const p = Math.pow(10, Math.floor(Math.log10(v)));
-        for (const m of [1, 2, 5, 10]) if (v <= m * p) return m * p;
-        return 10 * p;
+    // Mốc cao nhất của trục: chia 4 khoảng bằng nhau và MỖI MỐC LÀ SỐ NGUYÊN (0, 6, 12, 18, 24...),
+    // nên không bao giờ bị lặp số như "1 1 1 0 0" khi số liệu nhỏ
+    function niceTop(max) {
+        const raw = Math.max(1, max) / 4;
+        let step;
+        if (raw <= 10) step = Math.ceil(raw);
+        else {
+            const p = Math.pow(10, Math.floor(Math.log10(raw)));
+            step = [1, 2, 2.5, 5, 10].map(m => m * p).find(v => raw <= v);
+        }
+        return step * 4;
     }
 
     // Biểu đồ cột vẽ bằng SVG (không cần thư viện ngoài, không vi phạm chính sách bảo mật CSP)
@@ -21,7 +26,7 @@
         const W = 640, H = 220, L = 40, R = 8, T = 14, B = 30;
         const innerW = W - L - R, innerH = H - T - B;
         const total = rows.reduce((s, r) => s + r[key], 0);
-        const top = niceMax(Math.max(0, ...rows.map(r => r[key])));
+        const top = niceTop(Math.max(0, ...rows.map(r => r[key])));
         const slot = innerW / rows.length;
         const bw = Math.max(1, slot * 0.7);
         const y = v => T + innerH - (v / top) * innerH;
@@ -39,7 +44,7 @@
             const [yyyy, mm, dd] = r.date.split('-');
             svg += `<rect class="bar" x="${x.toFixed(1)}" y="${(T + innerH - h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}">` +
                 `<title>${dd}/${mm}/${yyyy}: ${fmt(r[key])}</title></rect>`;
-            if (i % step === 0 || (i === rows.length - 1 && i % step >= 3))
+            if ((rows.length - 1 - i) % step === 0)
                 svg += `<text class="tick" x="${(x + bw / 2).toFixed(1)}" y="${H - 10}" text-anchor="middle">${dd}/${mm}</text>`;
         });
         el.innerHTML = svg + '</svg>';
